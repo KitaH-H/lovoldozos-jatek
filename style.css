@@ -1,0 +1,72 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial;
+    background-color: black;
+    cursor: crosshair;
+    background-image: url("dust.jpg");
+    background-size: 2000px;
+    user-select: none;
+    background-repeat: no-repeat;
+}
+
+#pont {
+    font-size: 60px;
+    padding: 30px;
+    color: red;
+    font-weight: bolder;
+    text-shadow: 5px 5px black;
+}
+
+#fps{
+    color: green;
+}
+
+#doboz {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    transition: transform 0.1s ease;
+}
+
+#doboz:active {
+    transform: scale(0.85);
+}
+
+#doboz img {
+    width: 100%;
+    height: 100%;
+}
+
+#vege {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    padding: 40px;
+    border-radius: 20px;
+}
+
+#vege img {
+    width: 400px;
+    size: 1000px;
+}
+
+#cursor {
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  background: url("ak.png") no-repeat center/contain;
+  pointer-events: none;
+}
+
+.flash {
+    animation: flash 0.2s;
+}
+
+@keyframes flash {
+    0% { background: red; }
+    100% { background: black; }
+}

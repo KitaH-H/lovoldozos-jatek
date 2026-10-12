@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Játék</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="pont">Pont: 0</div>
+
+<div id="fps"></div>
+
+<div id="doboz">
+    <img id="kep" src="" draggable="false">
+</div>
+
+<div id="vege">    
+    <img id="nyert" src="" draggable="false">
+    <img id="vesztett" src="" draggable="false">
+</div>
+
+<div id="cursor"></div>
+
+<script>
+let pont = 0;
+let hibak = 0;
+let timer;
+let jatekFut = true;
+
+let win = "nyert.jpg";
+let lose = "vesztett.jpg";
+
+let kepek = ["jezus.jpg", "cica.jpg", "repa.png", "bunozo.jpg", "paradicsom.png", "medve.jpg", "target.jpg", "lab32.jpg"];
+let jo = ["repa.png", "bunozo.jpg", "paradicsom.png", "medve.jpg", "target.jpg", "lab32.jpg"];
+
+let doboz = document.getElementById("doboz");
+let kep = document.getElementById("kep");
+let pontKiiras = document.getElementById("pont");
+let oppp = document.getElementById("fps");
+let vegeDiv = document.getElementById("vege");
+let nyert = document.getElementById("nyert");
+let vesztett = document.getElementById("vesztett");
+
+function jatekVege(allapot) {
+    jatekFut = false;
+
+    clearTimeout(timer);
+    doboz.style.display = "none";
+    vegeDiv.style.display = "block";
+
+    if (allapot === "win") {
+        nyert.src = win;
+        vesztett.style.display = "none";
+    } else {
+        vesztett.src = lose;
+        nyert.style.display = "none";
+    }
+}
+
+document.addEventListener("mousemove", (e) => {
+  const cursor = document.getElementById("cursor");
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+document.addEventListener("click", function(e) {
+
+    if (!jatekFut) return;
+
+    if (e.target.id === "doboz" || e.target.id === "kep") {
+        let fileNev = kep.src.split("/").pop();
+
+        if (jo.includes(fileNev)) {
+            pont++;
+            hibak = 0;
+        } else {
+            pont--;
+            document.body.classList.remove("flash");
+            void document.body.offsetWidth;
+            document.body.classList.add("flash");
+        }
+
+        ujPont();
+        ujKep();
+    } else {
+        hibak++;
+
+        ujPont();
+
+        document.body.classList.remove("flash");
+        void document.body.offsetWidth;
+        document.body.classList.add("flash");
+    }
+});
+
+function randomHely() {
+    let x = Math.random() * (window.innerWidth - 120);
+    let y = Math.random() * (window.innerHeight - 120);
+
+    doboz.style.left = x + "px";
+    doboz.style.top = y + "px";
+}
+
+function ujKep() {
+    let index = Math.floor(Math.random() * kepek.length);
+    kep.src = kepek[index];
+
+    randomHely();
+
+    clearTimeout(timer);
+    timer = setTimeout(ujKep, getIdo());
+}
+
+function getIdo() {
+    if (pont > 40) return 500;
+    if (pont > 30) return 1000;
+    if (pont > 20) return 1500;
+    if (pont > 10) return 2000;
+    return 2500;
+}
+
+function ujPont() {
+    pontKiiras.innerHTML = "Pont: " + pont + " | Hibák: " + hibak + "/5";
+
+    if (pont >= 50) {
+        jatekVege("win");
+    }
+
+    if (pont <= -10) {
+        jatekVege("lose");
+    }
+
+    if (hibak >= 5) {
+        jatekVege("lose");
+    }
+
+    if (pont < 0) {
+        pontKiiras.style.color = "red";
+    } else if (pont < 10) {
+        pontKiiras.style.color = "aqua";
+    } else {
+        pontKiiras.style.color = "magenta";
+    }
+}
+
+oppp.innerHTML = `<p>Fps: Végtelen</p>    <p>Ms: Nem is volt</p>`
+
+ujKep();
+</script>
+
+</body>
+</html>
